@@ -3,8 +3,12 @@ from dotenv import load_dotenv
 from telebot.async_telebot import AsyncTeleBot
 import openai
 from requests.exceptions import ConnectionError, ReadTimeout
+from flask import Flask, request
+import telebot
 
 load_dotenv()
+
+app = Flask(__name__)
 
 historyPath = os.path.join(os.getcwd(), 'Cache')
 counter = 0
@@ -89,11 +93,26 @@ class FunBot:
         await bot.reply_to(message, reply)
 
 
-import asyncio
-# only for versions 4.7.0+
-try:
-    asyncio.run(bot.infinity_polling(timeout=10))
-except (ConnectionError, ReadTimeout) as e:
-    sys.stdout.flush()
-    os.execv(sys.argv[0], sys.argv)
+@app.route('/' + TELE_API_KEY, methods=['POST'])
+def getMessage():
+    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
+    return "!", 200
+
+
+@app.route("/")
+def webhook():
+    bot.remove_webhook()
+    bot.set_webhook(url='https://telegptchatbot.onrender.com/' + TELE_API_KEY)
+    return "!", 200
+# import asyncio
+# # only for versions 4.7.0+
+# try:
+#     asyncio.run(bot.infinity_polling(timeout=10))
+# except (ConnectionError, ReadTimeout) as e:
+#     sys.stdout.flush()
+#     os.execv(sys.argv[0], sys.argv)
+
+if __name__ == "__main__":
+    from waitress import serve
+    serve(app, host="https://telegptchatbot.onrender.com/", port=5000)
 
