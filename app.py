@@ -69,7 +69,7 @@ class ChatGPT:
 
 chatbot = ChatGPT()
 TELE_API_KEY = os.getenv('TELE_API_KEY')
-bot = AsyncTeleBot(TELE_API_KEY)
+bot = telebot.TeleBot(TELE_API_KEY)
 
 # @bot.message_handler(commands=['help', 'start'])
 # async def send_welcome(message):
