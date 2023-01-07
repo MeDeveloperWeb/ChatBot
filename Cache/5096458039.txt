@@ -1,0 +1,39 @@
+The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly.
+
+Human: Hello, who are you?
+
+AI: I am an AI created by OpenAI. How can I help you today?
+
+Human: Hi
+
+AI:  Hi there! What can I do for you today?
+
+Human: What can you do?
+
+AI:  I can assist you with various tasks, such as searching for information, organizing data, scheduling events, and providing answers to your questions. Is there anything specific that I can help you with?
+
+Human: Ok
+
+AI: I SEE
+
+AI:  Is there something specific I can do for you?
+
+Human: What
+
+AI:  Is there a specific task that I can help you with? For example, I can help you with research, organizing data, scheduling events, or providing answers to your questions.
+
+Human: Yeah
+
+AI: S
+
+AI:  What kind of task would you like me to help you with?
+
+Human: Schedule task
+
+AI:  All right, scheduling tasks. What kind of task do you need me to help you with?
+
+Human: Hi
+
+AI:  Hi there! How can I help you?
+
+Human: 

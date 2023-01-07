@@ -31,7 +31,7 @@ delete_old_files()
 class ChatGPT:
     openai.api_key = os.getenv("OPENAI_API_KEY")
     
-    async def chat(self, sender, msg):
+    def chat(self, sender, msg):
         self.add_user_prompt(sender, msg)
         start_sequence = "\nAI:"
         restart_sequence = "\nHuman: "
@@ -69,11 +69,11 @@ class ChatGPT:
 
 chatbot = ChatGPT()
 TELE_API_KEY = os.getenv('TELE_API_KEY')
-bot = AsyncTeleBot(TELE_API_KEY)
+bot = telebot.TeleBot(TELE_API_KEY)
 
 @bot.message_handler(commands=['help', 'start'])
-async def send_welcome(message):
-    await bot.reply_to(message, """\
+def send_welcome(message):
+    bot.reply_to(message, """\
 Hi there, I am ChatBot.
 I am here to talk with you all day and night. I remember what you say.
 Atleast for a day.
@@ -81,22 +81,19 @@ Atleast for a day.
 
 
 # Handle all other messages with content_type 'text' (content_types defaults to ['text'])
-@bot.message_handler(func=lambda message: True)
-async def echo_message(message):
+@bot.message_handler(func=lambda message: True, content_types=['text'])
+def chat(message):
     global counter
     counter += 1
     if counter == 10:
         delete_old_files()
-    reply = await chatbot.chat(message.chat.id, message.text)
-    await bot.reply_to(message, reply)
+    reply = chatbot.chat(message.chat.id, message.text)
+    bot.reply_to(message, reply)
 
-# @bot.message_handler(func=lambda message: True, content_types=['text'])
-# def echo_message(message):
-#     bot.reply_to(message, message.text)
 
 @app.route('/' + TELE_API_KEY, methods=['POST'])
 def getMessage():
-    bot.process_new_updates([telebot.async_telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
+    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
     return "!", 200
 
 
@@ -105,6 +102,9 @@ def webhook():
     bot.remove_webhook()
     bot.set_webhook(url='https://telegptchatbot.onrender.com/' + TELE_API_KEY)
     return "!", 200
+
+"""For Development Purposes"""
+
 # import asyncio
 # # only for versions 4.7.0+
 # try:
@@ -113,8 +113,10 @@ def webhook():
 #     sys.stdout.flush()
 #     os.execv(sys.argv[0], sys.argv)
 
+"""For Development Purposes"""
+
 if __name__ == "__main__":
-    # from waitress import serve
-    # serve(app, host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
-    app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
+    # app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
 
