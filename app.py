@@ -71,27 +71,28 @@ chatbot = ChatGPT()
 TELE_API_KEY = os.getenv('TELE_API_KEY')
 bot = AsyncTeleBot(TELE_API_KEY)
 
-class FunBot:
-
-    @bot.message_handler(commands=['help', 'start'])
-    async def send_welcome(message):
-        await bot.reply_to(message, """\
-    Hi there, I am ChatBot.
-    I am here to talk with you all day and night. I remember what you say.
-    Atleast for a day.
-    """)
+# @bot.message_handler(commands=['help', 'start'])
+# async def send_welcome(message):
+#     await bot.reply_to(message, """\
+# Hi there, I am ChatBot.
+# I am here to talk with you all day and night. I remember what you say.
+# Atleast for a day.
+# """)
 
 
-    # Handle all other messages with content_type 'text' (content_types defaults to ['text'])
-    @bot.message_handler(func=lambda message: True)
-    async def echo_message(message):
-        global counter
-        counter += 1
-        if counter == 10:
-            delete_old_files()
-        reply = await chatbot.chat(message.chat.id, message.text)
-        await bot.reply_to(message, reply)
+# # Handle all other messages with content_type 'text' (content_types defaults to ['text'])
+# @bot.message_handler(func=lambda message: True)
+# async def echo_message(message):
+#     global counter
+#     counter += 1
+#     if counter == 10:
+#         delete_old_files()
+#     reply = await chatbot.chat(message.chat.id, message.text)
+#     await bot.reply_to(message, reply)
 
+@bot.message_handler(func=lambda message: True, content_types=['text'])
+def echo_message(message):
+    bot.reply_to(message, message.text)
 
 @app.route('/' + TELE_API_KEY, methods=['POST'])
 def getMessage():
@@ -113,6 +114,7 @@ def webhook():
 #     os.execv(sys.argv[0], sys.argv)
 
 if __name__ == "__main__":
-    from waitress import serve
-    serve(app, host="0.0.0.0", port=5000)
+    # from waitress import serve
+    # serve(app, host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
+    app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
 
